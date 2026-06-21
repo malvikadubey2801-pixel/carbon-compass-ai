@@ -4,7 +4,9 @@ import random
 from datetime import datetime
 import pandas as pd
 import plotly.express as px
-import time
+
+# ✅ AUTO REFRESH TOOL (correct way)
+from streamlit_autorefresh import st_autorefresh
 
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(
@@ -31,7 +33,7 @@ def set_bg(image_file):
     }}
 
     .block-container {{
-        background-color: rgba(0,0,0,0.5);
+        background-color: rgba(0,0,0,0.55);
         padding: 20px;
         border-radius: 15px;
     }}
@@ -44,14 +46,14 @@ set_bg("assets/BG.png")
 st.title("🌱 Carbon Compass AI")
 st.caption("Track • Reduce • Grow • Sustain")
 
-# ---------------- REAL-TIME CLOCK ----------------
-st_autorefresh = st.experimental_rerun  # fallback
+# ---------------- REAL-TIME CLOCK FIX ----------------
+st_autorefresh(interval=1000, key="clock")
 
 col1, col2 = st.columns([3, 1])
 
 with col1:
     now = datetime.now().strftime("%d %B %Y | %H:%M:%S")
-    st.write("🕒 ", now)
+    st.write("🕒 Current Time:", now)
 
 with col2:
     st.metric("Plant Level", "Seed 🌱")
@@ -73,7 +75,7 @@ bike = st.number_input("Bike Travel (km)", 0)
 ac = st.number_input("AC Usage (hours)", 0)
 lift = st.number_input("Lift Trips", 0)
 
-# ---------------- CARBON CALCULATION ----------------
+# ---------------- CALCULATION ----------------
 if st.button("Calculate Footprint"):
 
     score = (
@@ -95,22 +97,27 @@ if st.button("Calculate Footprint"):
     else:
         plant = "🌲 Forest"
 
-    st.metric("Your Plant Growth", plant)
+    st.metric("Plant Growth", plant)
 
     # ---------------- AI RECOMMENDATION ----------------
     st.subheader("🧠 AI Advisor")
 
     if score > 30:
-        st.error("Reduce AC usage + avoid car travel 🚫")
+        st.error("High carbon usage ⚠ Reduce AC & car usage")
     elif score > 15:
-        st.warning("Try walking or reducing AC time 🌿")
+        st.warning("Moderate footprint 🌿 Try eco-friendly options")
     else:
-        st.success("Great job! Low footprint 🌱")
+        st.success("Great job 🌱 Low footprint!")
 
     # ---------------- GRAPH ----------------
     df = pd.DataFrame({
         "Activity": ["Car", "Bike", "AC", "Lift"],
-        "Impact": [car*0.21, bike*0.05, ac*0.5, lift*0.1]
+        "Impact": [
+            car * 0.21,
+            bike * 0.05,
+            ac * 0.5,
+            lift * 0.1
+        ]
     })
 
     fig = px.pie(df, names="Activity", values="Impact", title="Carbon Breakdown")
@@ -120,14 +127,10 @@ if st.button("Calculate Footprint"):
 facts = [
     "Public transport reduces emissions by 45%",
     "1 tree absorbs ~21kg CO₂ per year",
-    "Turning off AC saves huge energy",
+    "Turning off AC saves energy",
     "Walking reduces pollution instantly",
     "Plastic takes 500+ years to decompose"
 ]
 
 st.markdown("### 🌍 Environmental Fact")
 st.info(random.choice(facts))
-
-# ---------------- AUTO REFRESH CLOCK FIX ----------------
-time.sleep(1)
-st.rerun()

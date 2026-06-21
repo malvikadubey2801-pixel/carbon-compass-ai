@@ -25,7 +25,7 @@ def set_bg(image_file):
         background-attachment: fixed;
     }}
 
-    h1, h2, h3, p {{
+    h1, h2, h3 {{
         color: white !important;
     }}
 
@@ -43,16 +43,21 @@ set_bg("assets/BG.png")
 st.title("🌱 Carbon Compass AI")
 st.caption("Track • Reduce • Grow • Sustain")
 
-# ---------------- REAL TIME CLOCK (FIXED) ----------------
+# ---------------- CLOCK ----------------
 now = datetime.now().strftime("%d %B %Y | %H:%M:%S")
 st.write("🕒 Current Time:", now)
 
-# ---------------- USER INPUT ----------------
+# ---------------- USER INFO ----------------
 name = st.text_input("Enter Your Name")
 
 occupation = st.selectbox(
     "Occupation",
     ["Student", "Working Professional", "Researcher", "Teacher", "Other"]
+)
+
+diet = st.selectbox(
+    "Diet Type",
+    ["Vegan", "Vegetarian", "Mixed", "High Meat Consumption"]
 )
 
 st.header("🌍 Daily Activity Logger")
@@ -62,27 +67,45 @@ bike = st.number_input("Bike Travel (km)", 0)
 ac = st.number_input("AC Usage (hours)", 0)
 lift = st.number_input("Lift Trips", 0)
 
-# ---------------- FACTS (SMART ROTATION FIXED) ----------------
+# ---------------- SCIENTIFIC FACTS ----------------
 facts = [
-    "🌍 Transport contributes ~25% of global CO₂ emissions.",
-    "🌱 One tree absorbs ~21kg CO₂ per year.",
-    "🚗 A 10km car ride emits ~2.4kg CO₂.",
-    "❄️ AC usage is one of the highest electricity consumers in homes.",
-    "🚶 Walking reduces your carbon footprint to almost zero.",
-    "🚲 Cycling produces ZERO direct emissions.",
+    "Transport contributes ~25% of global CO₂ emissions.",
+    "One tree absorbs ~21kg CO₂ per year.",
+    "AC usage can account for 30% of home electricity.",
+    "A 10km car ride emits ~2.4kg CO₂.",
+    "Cycling produces zero emissions.",
 ]
 
-st.markdown("### 🌍 Live Environmental Insight")
+st.markdown("### 🌍 Environmental Insight")
 st.info(random.choice(facts))
 
 # ---------------- CALCULATION ----------------
 if st.button("Calculate Footprint"):
 
+    # DIET IMPACT (NEW)
+    diet_score = {
+        "Vegan": 2,
+        "Vegetarian": 4,
+        "Mixed": 8,
+        "High Meat Consumption": 12
+    }[diet]
+
+    # OCCUPATION IMPACT (NEW)
+    occ_score = {
+        "Student": 3,
+        "Working Professional": 6,
+        "Researcher": 4,
+        "Teacher": 5,
+        "Other": 5
+    }[occupation]
+
     score = (
         car * 0.21 +
         bike * 0.05 +
         ac * 0.5 +
-        lift * 0.1
+        lift * 0.1 +
+        diet_score +
+        occ_score
     )
 
     st.success(f"🌍 Your Carbon Score: {score:.2f}")
@@ -99,28 +122,62 @@ if st.button("Calculate Footprint"):
 
     st.metric("Your Plant Growth", plant)
 
-    # ---------------- AI RECOMMENDATION (FIXED LOGIC) ----------------
-    st.subheader("🧠 AI Advisor")
+    # ---------------- AI RECOMMENDATION (DETAILED UPGRADE) ----------------
+    st.subheader("🧠 AI Sustainability Advisor")
 
-    if score > 30:
-        st.error("High emission detected 🚨 Reduce car usage + AC time immediately.")
-        st.write("👉 Suggested Action: Walk 2–3 km daily + reduce AC by 1 hour")
-    elif score > 15:
-        st.warning("Moderate footprint 🌿 Improve transport habits.")
-        st.write("👉 Suggested Action: Use public transport or cycling twice a week")
+    if score > 35:
+        st.error("🚨 High Environmental Impact Detected")
+
+        st.markdown("""
+        **Detailed Analysis:**
+        - Your transport usage is high (car + lift)
+        - Diet has significant carbon contribution
+        - AC usage increases energy footprint
+
+        **AI Recommendations:**
+        - Replace 50% car travel with walking/public transport
+        - Reduce AC usage by 1–2 hours daily
+        - Shift 2–3 meals/week to vegetarian options
+        - Take stairs instead of lift whenever possible
+        """)
+
+    elif score > 18:
+        st.warning("🌿 Moderate Carbon Footprint")
+
+        st.markdown("""
+        **Analysis:**
+        - Balanced but improvable lifestyle
+
+        **Recommendations:**
+        - Reduce short car trips (<3km)
+        - Increase walking/cycling frequency
+        - Try low-meat meals twice a week
+        - Optimize AC usage with timers
+        """)
+
     else:
-        st.success("Excellent 🌱 Very low carbon footprint!")
+        st.success("🌱 Excellent Sustainable Lifestyle!")
 
-    # ---------------- GRAPH FIXED ----------------
+        st.markdown("""
+        Keep it up!
+        - You already maintain low emissions
+        - Continue using eco-friendly transport
+        - Maintain plant-based diet balance
+        """)
+
+    # ---------------- GRAPH ----------------
     df = pd.DataFrame({
-        "Activity": ["Car", "Bike", "AC", "Lift"],
+        "Activity": ["Car", "Bike", "AC", "Lift", "Diet", "Occupation"],
         "Impact": [
             car * 0.21,
             bike * 0.05,
             ac * 0.5,
-            lift * 0.1
+            lift * 0.1,
+            diet_score,
+            occ_score
         ]
     })
 
-    fig = px.pie(df, names="Activity", values="Impact", title="Carbon Breakdown")
+    fig = px.pie(df, names="Activity", values="Impact",
+                 title="Carbon Footprint Breakdown")
     st.plotly_chart(fig, use_container_width=True)

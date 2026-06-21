@@ -25,12 +25,23 @@ def set_bg(image_file):
         background-attachment: fixed;
     }}
 
-    h1, h2, h3 {{
-        color: white !important;
+    /* FIX TEXT VISIBILITY */
+    h1 {{
+        color: black !important;
+        font-weight: 800;
+    }}
+
+    h2, h3 {{
+        color: black !important;
+        font-weight: 700;
+    }}
+
+    p, div {{
+        color: black !important;
     }}
 
     .block-container {{
-        background-color: rgba(0,0,0,0.55);
+        background-color: rgba(255,255,255,0.75);
         padding: 20px;
         border-radius: 15px;
     }}
@@ -67,13 +78,13 @@ bike = st.number_input("Bike Travel (km)", 0)
 ac = st.number_input("AC Usage (hours)", 0)
 lift = st.number_input("Lift Trips", 0)
 
-# ---------------- SCIENTIFIC FACTS ----------------
+# ---------------- FACTS ----------------
 facts = [
     "Transport contributes ~25% of global CO₂ emissions.",
     "One tree absorbs ~21kg CO₂ per year.",
-    "AC usage can account for 30% of home electricity.",
-    "A 10km car ride emits ~2.4kg CO₂.",
+    "AC usage is a major energy consumer in homes.",
     "Cycling produces zero emissions.",
+    "Walking is the most eco-friendly transport."
 ]
 
 st.markdown("### 🌍 Environmental Insight")
@@ -82,7 +93,6 @@ st.info(random.choice(facts))
 # ---------------- CALCULATION ----------------
 if st.button("Calculate Footprint"):
 
-    # DIET IMPACT (NEW)
     diet_score = {
         "Vegan": 2,
         "Vegetarian": 4,
@@ -90,7 +100,6 @@ if st.button("Calculate Footprint"):
         "High Meat Consumption": 12
     }[diet]
 
-    # OCCUPATION IMPACT (NEW)
     occ_score = {
         "Student": 3,
         "Working Professional": 6,
@@ -122,48 +131,58 @@ if st.button("Calculate Footprint"):
 
     st.metric("Your Plant Growth", plant)
 
-    # ---------------- AI RECOMMENDATION (DETAILED UPGRADE) ----------------
+    # ---------------- AI RECOMMENDATION (FIXED BLACK TEXT) ----------------
     st.subheader("🧠 AI Sustainability Advisor")
 
+    recommendation_style = """
+    <div style="color:black; font-size:16px; font-weight:500;">
+    """
+
     if score > 35:
-        st.error("🚨 High Environmental Impact Detected")
+        st.error("High Environmental Impact Detected 🚨")
 
-        st.markdown("""
-        **Detailed Analysis:**
-        - Your transport usage is high (car + lift)
-        - Diet has significant carbon contribution
-        - AC usage increases energy footprint
+        st.markdown(recommendation_style + """
+        <b>Analysis:</b><br>
+        - High transport emissions (car/lift usage)<br>
+        - Diet contributes significantly<br>
+        - AC usage increases energy footprint<br><br>
 
-        **AI Recommendations:**
-        - Replace 50% car travel with walking/public transport
-        - Reduce AC usage by 1–2 hours daily
-        - Shift 2–3 meals/week to vegetarian options
-        - Take stairs instead of lift whenever possible
-        """)
+        <b>Recommendations:</b><br>
+        - Replace car trips with walking/public transport<br>
+        - Reduce AC usage by 1–2 hours daily<br>
+        - Shift to vegetarian meals 2–3 times/week<br>
+        - Use stairs instead of lift whenever possible<br>
+        </div>
+        """, unsafe_allow_html=True)
 
     elif score > 18:
-        st.warning("🌿 Moderate Carbon Footprint")
+        st.warning("Moderate Carbon Footprint 🌿")
 
-        st.markdown("""
-        **Analysis:**
-        - Balanced but improvable lifestyle
+        st.markdown(recommendation_style + """
+        <b>Analysis:</b><br>
+        - Balanced lifestyle but improvements possible<br><br>
 
-        **Recommendations:**
-        - Reduce short car trips (<3km)
-        - Increase walking/cycling frequency
-        - Try low-meat meals twice a week
-        - Optimize AC usage with timers
-        """)
+        <b>Recommendations:</b><br>
+        - Reduce short car trips<br>
+        - Increase walking/cycling<br>
+        - Try low-meat meals occasionally<br>
+        - Optimize AC usage<br>
+        </div>
+        """, unsafe_allow_html=True)
 
     else:
-        st.success("🌱 Excellent Sustainable Lifestyle!")
+        st.success("Excellent Sustainable Lifestyle 🌱")
 
-        st.markdown("""
-        Keep it up!
-        - You already maintain low emissions
-        - Continue using eco-friendly transport
-        - Maintain plant-based diet balance
-        """)
+        st.markdown(recommendation_style + """
+        <b>Analysis:</b><br>
+        - Very low carbon footprint lifestyle<br><br>
+
+        <b>Keep Doing:</b><br>
+        - Continue eco-friendly habits<br>
+        - Maintain walking/cycling routine<br>
+        - Keep diet sustainable<br>
+        </div>
+        """, unsafe_allow_html=True)
 
     # ---------------- GRAPH ----------------
     df = pd.DataFrame({
@@ -180,4 +199,5 @@ if st.button("Calculate Footprint"):
 
     fig = px.pie(df, names="Activity", values="Impact",
                  title="Carbon Footprint Breakdown")
+
     st.plotly_chart(fig, use_container_width=True)

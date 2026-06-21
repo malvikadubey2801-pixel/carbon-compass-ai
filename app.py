@@ -5,9 +5,6 @@ from datetime import datetime
 import pandas as pd
 import plotly.express as px
 
-# ✅ AUTO REFRESH TOOL (correct way)
-from streamlit_autorefresh import st_autorefresh
-
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(
     page_title="Carbon Compass AI",
@@ -46,19 +43,9 @@ set_bg("assets/BG.png")
 st.title("🌱 Carbon Compass AI")
 st.caption("Track • Reduce • Grow • Sustain")
 
-# ---------------- REAL-TIME CLOCK FIX ----------------
-st_autorefresh(interval=1000, key="clock")
-
-col1, col2 = st.columns([3, 1])
-
-with col1:
-    now = datetime.now().strftime("%d %B %Y | %H:%M:%S")
-    st.write("🕒 Current Time:", now)
-
-with col2:
-    st.metric("Plant Level", "Seed 🌱")
-
-st.divider()
+# ---------------- REAL TIME CLOCK (FIXED) ----------------
+now = datetime.now().strftime("%d %B %Y | %H:%M:%S")
+st.write("🕒 Current Time:", now)
 
 # ---------------- USER INPUT ----------------
 name = st.text_input("Enter Your Name")
@@ -74,6 +61,19 @@ car = st.number_input("Car Travel (km)", 0)
 bike = st.number_input("Bike Travel (km)", 0)
 ac = st.number_input("AC Usage (hours)", 0)
 lift = st.number_input("Lift Trips", 0)
+
+# ---------------- FACTS (SMART ROTATION FIXED) ----------------
+facts = [
+    "🌍 Transport contributes ~25% of global CO₂ emissions.",
+    "🌱 One tree absorbs ~21kg CO₂ per year.",
+    "🚗 A 10km car ride emits ~2.4kg CO₂.",
+    "❄️ AC usage is one of the highest electricity consumers in homes.",
+    "🚶 Walking reduces your carbon footprint to almost zero.",
+    "🚲 Cycling produces ZERO direct emissions.",
+]
+
+st.markdown("### 🌍 Live Environmental Insight")
+st.info(random.choice(facts))
 
 # ---------------- CALCULATION ----------------
 if st.button("Calculate Footprint"):
@@ -97,19 +97,21 @@ if st.button("Calculate Footprint"):
     else:
         plant = "🌲 Forest"
 
-    st.metric("Plant Growth", plant)
+    st.metric("Your Plant Growth", plant)
 
-    # ---------------- AI RECOMMENDATION ----------------
+    # ---------------- AI RECOMMENDATION (FIXED LOGIC) ----------------
     st.subheader("🧠 AI Advisor")
 
     if score > 30:
-        st.error("High carbon usage ⚠ Reduce AC & car usage")
+        st.error("High emission detected 🚨 Reduce car usage + AC time immediately.")
+        st.write("👉 Suggested Action: Walk 2–3 km daily + reduce AC by 1 hour")
     elif score > 15:
-        st.warning("Moderate footprint 🌿 Try eco-friendly options")
+        st.warning("Moderate footprint 🌿 Improve transport habits.")
+        st.write("👉 Suggested Action: Use public transport or cycling twice a week")
     else:
-        st.success("Great job 🌱 Low footprint!")
+        st.success("Excellent 🌱 Very low carbon footprint!")
 
-    # ---------------- GRAPH ----------------
+    # ---------------- GRAPH FIXED ----------------
     df = pd.DataFrame({
         "Activity": ["Car", "Bike", "AC", "Lift"],
         "Impact": [
@@ -121,16 +123,4 @@ if st.button("Calculate Footprint"):
     })
 
     fig = px.pie(df, names="Activity", values="Impact", title="Carbon Breakdown")
-    st.plotly_chart(fig)
-
-# ---------------- DAILY FACT ----------------
-facts = [
-    "Public transport reduces emissions by 45%",
-    "1 tree absorbs ~21kg CO₂ per year",
-    "Turning off AC saves energy",
-    "Walking reduces pollution instantly",
-    "Plastic takes 500+ years to decompose"
-]
-
-st.markdown("### 🌍 Environmental Fact")
-st.info(random.choice(facts))
+    st.plotly_chart(fig, use_container_width=True)

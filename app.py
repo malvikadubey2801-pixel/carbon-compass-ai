@@ -60,7 +60,7 @@ def set_bg(image_file):
         st.warning("Background not found. Check file name.")
 
 # ⚠️ YOUR FILE NAME (IMPORTANT)
-set_bg("assets/bg.png.png")
+set_bg("assets/BG.png")
 
 # ---------------- TITLE ----------------
 st.markdown("<div class='title'>🌱 Carbon Compass AI</div>", unsafe_allow_html=True)

@@ -25,23 +25,13 @@ def set_bg(image_file):
         background-attachment: fixed;
     }}
 
-    /* FIX TEXT VISIBILITY */
-    h1 {{
+    h1, h2, h3 {{
         color: black !important;
         font-weight: 800;
     }}
 
-    h2, h3 {{
-        color: black !important;
-        font-weight: 700;
-    }}
-
-    p, div {{
-        color: black !important;
-    }}
-
     .block-container {{
-        background-color: rgba(255,255,255,0.75);
+        background-color: rgba(255,255,255,0.80);
         padding: 20px;
         border-radius: 15px;
     }}
@@ -58,7 +48,7 @@ st.caption("Track • Reduce • Grow • Sustain")
 now = datetime.now().strftime("%d %B %Y | %H:%M:%S")
 st.write("🕒 Current Time:", now)
 
-# ---------------- USER INFO ----------------
+# ---------------- USER INPUT ----------------
 name = st.text_input("Enter Your Name")
 
 occupation = st.selectbox(
@@ -82,9 +72,9 @@ lift = st.number_input("Lift Trips", 0)
 facts = [
     "Transport contributes ~25% of global CO₂ emissions.",
     "One tree absorbs ~21kg CO₂ per year.",
-    "AC usage is a major energy consumer in homes.",
     "Cycling produces zero emissions.",
-    "Walking is the most eco-friendly transport."
+    "Walking is the most eco-friendly transport.",
+    "AC usage is a major energy consumer."
 ]
 
 st.markdown("### 🌍 Environmental Insight")
@@ -131,58 +121,44 @@ if st.button("Calculate Footprint"):
 
     st.metric("Your Plant Growth", plant)
 
-    # ---------------- AI RECOMMENDATION (FIXED BLACK TEXT) ----------------
-    st.subheader("🧠 AI Sustainability Advisor")
-
-    recommendation_style = """
-    <div style="color:black; font-size:16px; font-weight:500;">
-    """
+    # ---------------- AI ADVISOR (FIXED CLEAN UI) ----------------
+    st.markdown("### 🧠 AI Sustainability Advisor")
 
     if score > 35:
         st.error("High Environmental Impact Detected 🚨")
 
-        st.markdown(recommendation_style + """
-        <b>Analysis:</b><br>
-        - High transport emissions (car/lift usage)<br>
-        - Diet contributes significantly<br>
-        - AC usage increases energy footprint<br><br>
+        st.markdown("**Analysis:**")
+        st.write("- High transport usage increases emissions")
+        st.write("- Diet contributes significantly")
+        st.write("- AC usage increases energy footprint")
 
-        <b>Recommendations:</b><br>
-        - Replace car trips with walking/public transport<br>
-        - Reduce AC usage by 1–2 hours daily<br>
-        - Shift to vegetarian meals 2–3 times/week<br>
-        - Use stairs instead of lift whenever possible<br>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("**Recommendations:**")
+        st.write("- Reduce car travel & use public transport")
+        st.write("- Reduce AC usage by 1–2 hours daily")
+        st.write("- Shift towards vegetarian meals")
+        st.write("- Use stairs instead of lift")
 
     elif score > 18:
         st.warning("Moderate Carbon Footprint 🌿")
 
-        st.markdown(recommendation_style + """
-        <b>Analysis:</b><br>
-        - Balanced lifestyle but improvements possible<br><br>
+        st.markdown("**Analysis:**")
+        st.write("- Balanced lifestyle with room for improvement")
 
-        <b>Recommendations:</b><br>
-        - Reduce short car trips<br>
-        - Increase walking/cycling<br>
-        - Try low-meat meals occasionally<br>
-        - Optimize AC usage<br>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("**Recommendations:**")
+        st.write("- Reduce short car trips")
+        st.write("- Increase walking/cycling")
+        st.write("- Optimize AC usage")
 
     else:
         st.success("Excellent Sustainable Lifestyle 🌱")
 
-        st.markdown(recommendation_style + """
-        <b>Analysis:</b><br>
-        - Very low carbon footprint lifestyle<br><br>
+        st.markdown("**Analysis:**")
+        st.write("- Very low carbon footprint lifestyle")
 
-        <b>Keep Doing:</b><br>
-        - Continue eco-friendly habits<br>
-        - Maintain walking/cycling routine<br>
-        - Keep diet sustainable<br>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("**Keep Doing:**")
+        st.write("- Continue eco-friendly habits")
+        st.write("- Maintain walking/cycling routine")
+        st.write("- Keep diet sustainable")
 
     # ---------------- GRAPH ----------------
     df = pd.DataFrame({
